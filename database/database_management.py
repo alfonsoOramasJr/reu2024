@@ -13,8 +13,8 @@ def create_tables_if_not_exist():
         cursor.execute(f"""
         CREATE TABLE IF NOT EXISTS {table} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-            data BLOB
+            channel INTEGER NOT NULL,
+            data_value INTEGER NOT NULL
         )
         """)
 
