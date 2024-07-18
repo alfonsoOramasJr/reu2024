@@ -48,6 +48,7 @@ def get_data_type():
 def start_server():
     TOTAL_CLIENTS = 2  ## The number of ESP32's we're collecting data from
     TOTAL_VALUES_FROM_EACH_CLIENT = 1000  ## The expected number of values from each client
+    DEBUG = True  ## Set to True to enable debug output
 
     data_type = get_data_type()
     print(f"Data type set to: {data_type}")
@@ -80,7 +81,8 @@ def start_server():
                 if data:
                     data_values = list(struct.unpack(f'{len(data)//4}i', data))  # Convert received byte array to a list of integers
                     buffers[i].append(data_values)
-                    print(f"Data from {client_address}: {data_values}")
+                    if DEBUG:
+                        print(f"Data from {client_address}: {data_values}")
 
     except KeyboardInterrupt:
         print("Server interrupted by user. Closing connections.")
