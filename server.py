@@ -1,6 +1,7 @@
 import socket
 import os
 import struct
+from database.database_management import DatabaseManager
 
 def read_server_config():
     ip_file_path = os.path.join('server_configuration', 'ip.txt')
@@ -46,12 +47,17 @@ def get_data_type():
             print("Invalid input. Please enter a number between 1 and 5.")
 
 def start_server():
-    TOTAL_CLIENTS = 2  ## The number of ESP32's we're collecting data from
-    TOTAL_VALUES_FROM_EACH_CLIENT = 1000  ## The expected number of values from each client
-    DEBUG = True  ## Set to True to enable debug output
+    TOTAL_CLIENTS = 2  # The number of ESP32's we're collecting data from
+    TOTAL_VALUES_FROM_EACH_CLIENT = 1000  # The expected number of values from each client
+    DEBUG = True  # Set to True to enable debug output
 
     data_type = get_data_type()
     print(f"Data type set to: {data_type}")
+
+    # Initialize the DatabaseManager
+    db_path = os.path.join('database', 'database.db')
+    db_manager = DatabaseManager(db_path)
+    db_manager.create_tables_if_not_exist()
 
     try:
         ip, port = read_server_config()
@@ -96,6 +102,20 @@ def start_server():
         # Process the collected data
         for i, buffer in enumerate(buffers):
             print(f"Data collected from client {i}: {buffer}")
+
+            # Insert collected data into the database
+            for data_values in buffer:
+                for value in data_values:
+                    try:
+                        # Assuming channel is fixed or you can derive it based on client index
+                        channel = i + 1  # Example: channel 1 for client 1, channel 2 for client 2, etc.
+                        db_manager.cursor.execute(f"INSERT INTO {data_type} (channel, data_value) VALUES (?, ?)", (channel, value))
+                    except ValueError:
+                        print(f"Invalid data format: {value}")
+
+            db_manager.conn.commit()
+
+        db_manager.close_connection()
 
 if __name__ == "__main__":
     start_server()
