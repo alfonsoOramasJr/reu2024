@@ -19,7 +19,7 @@ def create_tables_if_not_exist():
         """)
 
     conn.commit()
-    conn.close()
+    close_connection(conn, cursor)
 
 def get_values_from_table(table_name, channel):
     if table_name not in ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky"]:
@@ -31,8 +31,14 @@ def get_values_from_table(table_name, channel):
     cursor.execute(f"SELECT * FROM {table_name} WHERE channel = ?", (channel,))
     rows = cursor.fetchall()
 
-    conn.close()
+    close_connection(conn, cursor)
     return rows
+
+def close_connection(conn, cursor):
+    if cursor:
+        cursor.close()
+    if conn:
+        conn.close()
 
 if __name__ == "__main__":
     create_tables_if_not_exist()
