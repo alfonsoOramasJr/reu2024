@@ -4,6 +4,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense, Concatenate, Add
 from tensorflow.keras.optimizers import Adam
 from database.database_management import DatabaseManager
+import random
 
 # Constants
 INPUT_SIZE = 100  # Number of nodes in each input layer
@@ -74,10 +75,8 @@ def load_data_from_db():
     # Define tables corresponding to each finger
     fingers = ['thumb', 'index_finger', 'middle_finger', 'ring_finger', 'pinky']
     
-    # Initialize lists to hold data and labels
-    channel1_data = []
-    channel2_data = []
-    labels = []
+    # Initialize list to hold data and labels
+    combined_data = []
 
     for i, finger in enumerate(fingers):
         # Load data for both channels for the current finger
@@ -89,19 +88,20 @@ def load_data_from_db():
         channel1_records = channel1_records[:min_length]
         channel2_records = channel2_records[:min_length]
 
-        # Extract the data values and add to the lists
-        channel1_data.extend([record[2] for record in channel1_records])
-        channel2_data.extend([record[2] for record in channel2_records])
-        
-        # Create labels for the current finger
-        labels.extend([i] * min_length)
+        # Combine the data and labels
+        for j in range(min_length):
+            combined_data.append((channel1_records[j][2], channel2_records[j][2], i))
 
-    # Convert lists to numpy arrays and reshape
+    db_manager.close_connection()
+
+    # Shuffle the combined data
+    random.shuffle(combined_data)
+
+    # Separate the combined data into x1, x2, and y
+    channel1_data, channel2_data, labels = zip(*combined_data)
     x1 = np.array(channel1_data).reshape(-1, INPUT_SIZE)
     x2 = np.array(channel2_data).reshape(-1, INPUT_SIZE)
     y = tf.keras.utils.to_categorical(labels, num_classes=5)
-
-    db_manager.close_connection()
 
     return x1, x2, y
 
