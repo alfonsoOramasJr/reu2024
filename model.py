@@ -3,6 +3,7 @@ import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense, Concatenate, Add
 from tensorflow.keras.optimizers import Adam
+from database.database_management import DatabaseManager
 
 # Constants
 INPUT_SIZE = 100  # Number of nodes in each input layer
@@ -66,6 +67,44 @@ def create_isolated_channel_single_output_model():
     
     return model
 
+def load_data_from_db():
+    db_path = 'database/database.db'
+    db_manager = DatabaseManager(db_path)
+
+    # Define tables corresponding to each finger
+    fingers = ['thumb', 'index_finger', 'middle_finger', 'ring_finger', 'pinky']
+    
+    # Initialize lists to hold data and labels
+    channel1_data = []
+    channel2_data = []
+    labels = []
+
+    for i, finger in enumerate(fingers):
+        # Load data for both channels for the current finger
+        channel1_records = db_manager.get_values_from_table(finger, 1)
+        channel2_records = db_manager.get_values_from_table(finger, 2)
+        
+        # Ensure both channels have the same number of records
+        min_length = min(len(channel1_records), len(channel2_records))
+        channel1_records = channel1_records[:min_length]
+        channel2_records = channel2_records[:min_length]
+
+        # Extract the data values and add to the lists
+        channel1_data.extend([record[2] for record in channel1_records])
+        channel2_data.extend([record[2] for record in channel2_records])
+        
+        # Create labels for the current finger
+        labels.extend([i] * min_length)
+
+    # Convert lists to numpy arrays and reshape
+    x1 = np.array(channel1_data).reshape(-1, INPUT_SIZE)
+    x2 = np.array(channel2_data).reshape(-1, INPUT_SIZE)
+    y = tf.keras.utils.to_categorical(labels, num_classes=5)
+
+    db_manager.close_connection()
+
+    return x1, x2, y
+
 # Example usage
 if __name__ == "__main__":
     dual_channel_model = create_dual_channel_model()
@@ -73,13 +112,10 @@ if __name__ == "__main__":
     
     dual_channel_model.summary()
     isolated_channel_single_output_model.summary()
-    
-    # Generate some dummy data for demonstration
-    x1 = np.random.random((32, INPUT_SIZE))
-    x2 = np.random.random((32, INPUT_SIZE))
-    y = np.random.randint(5, size=(32, 1))
-    y = tf.keras.utils.to_categorical(y, num_classes=5)
-    
+
+    # Load data from database
+    x1, x2, y = load_data_from_db()
+
     # Train the dual channel model
     dual_channel_model.fit([x1, x2], y, epochs=10, batch_size=32)
     
