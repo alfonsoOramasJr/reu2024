@@ -45,6 +45,8 @@ def get_data_type():
             print("Invalid input. Please enter a number between 1 and 5.")
 
 def start_server():
+    TOTAL_CLIENTS = 2 ## The amount of ESP32's were collecting data from
+
     data_type = get_data_type()
     print(f"Data type set to: {data_type}")
 
@@ -56,14 +58,14 @@ def start_server():
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((ip, port))
-    server_socket.listen(5)
+    server_socket.listen(TOTAL_CLIENTS)
     print(f"Server started at {ip}:{port}")
 
     clients = []
     buffers = [b'', b'']
 
     try:
-        while len(clients) < 2:
+        while len(clients) < TOTAL_CLIENTS:
             client_socket, client_address = server_socket.accept()
             print(f"Connection from {client_address}")
             clients.append((client_socket, client_address))
