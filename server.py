@@ -26,9 +26,9 @@ def read_server_config():
 def get_data_type():
     finger_types = {
         1: "thumb",
-        2: "index finger",
-        3: "middle finger",
-        4: "ring finger",
+        2: "index_finger",
+        3: "middle_finger",
+        4: "ring_finger",
         5: "pinky"
     }
 
