@@ -40,6 +40,19 @@ class DatabaseManager:
         rows = self.cursor.fetchall()
         return rows
 
+    def gather_all_data(self):
+        tables = ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky"]
+        all_data = []
+
+        for table in tables:
+            self.cursor.execute(f"SELECT DISTINCT channel FROM {table}")
+            channels = [row[0] for row in self.cursor.fetchall()]
+            for channel in channels:
+                data = self.get_values_from_table(table, channel)
+                all_data.append(data)
+
+        return all_data
+
 if __name__ == "__main__":
     DATABASE_PATH = os.path.join(os.path.dirname(__file__), 'database.db')
     db_manager = DatabaseManager(DATABASE_PATH)
@@ -47,4 +60,7 @@ if __name__ == "__main__":
     # Example usage
     # values = db_manager.get_values_from_table("thumb", 1)
     # print(values)
+    all_data = db_manager.gather_all_data()
+    for data in all_data:
+        print(data)
     db_manager.close_connection()
