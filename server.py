@@ -1,5 +1,6 @@
 import socket
 import os
+import struct
 
 def read_server_config():
     ip_file_path = os.path.join('server_configuration', 'ip.txt')
@@ -45,7 +46,8 @@ def get_data_type():
             print("Invalid input. Please enter a number between 1 and 5.")
 
 def start_server():
-    TOTAL_CLIENTS = 2 ## The amount of ESP32's were collecting data from
+    TOTAL_CLIENTS = 2  ## The number of ESP32's we're collecting data from
+    TOTAL_VALUES_FROM_EACH_CLIENT = 1000  ## The expected number of values from each client
 
     data_type = get_data_type()
     print(f"Data type set to: {data_type}")
@@ -62,7 +64,7 @@ def start_server():
     print(f"Server started at {ip}:{port}")
 
     clients = []
-    buffers = [b'', b'']
+    buffers = [[] for _ in range(TOTAL_CLIENTS)]  # List of lists to hold data values for each client
 
     try:
         while len(clients) < TOTAL_CLIENTS:
@@ -70,13 +72,15 @@ def start_server():
             print(f"Connection from {client_address}")
             clients.append((client_socket, client_address))
         
-        print("Both clients are connected. Switching between clients to record data.")
+        print("Both clients are connected. Collecting data...")
 
         while True:
             for i, (client_socket, client_address) in enumerate(clients):
-                data = client_socket.recv(1024)
-                buffers[i] += data
-                print(f"Data from {client_address}: {data}")
+                data = client_socket.recv(TOTAL_VALUES_FROM_EACH_CLIENT * 4)  # Assuming each int is 4 bytes
+                if data:
+                    data_values = list(struct.unpack(f'{len(data)//4}i', data))  # Convert received byte array to a list of integers
+                    buffers[i].append(data_values)
+                    print(f"Data from {client_address}: {data_values}")
 
     except KeyboardInterrupt:
         print("Server interrupted by user. Closing connections.")
@@ -86,6 +90,10 @@ def start_server():
                 client_socket.close()
         server_socket.close()
         print("Server shut down gracefully.")
+
+        # Process the collected data
+        for i, buffer in enumerate(buffers):
+            print(f"Data collected from client {i}: {buffer}")
 
 if __name__ == "__main__":
     start_server()
