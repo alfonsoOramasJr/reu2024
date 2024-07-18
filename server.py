@@ -44,6 +44,15 @@ def start_server():
             client_socket, client_address = server_socket.accept()
             print(f"Connection from {client_address}")
             clients.append((client_socket, client_address))
+
+        print("Both clients are connected. Switching between clients to record data.")
+
+        while True:
+            for i, (client_socket, client_address) in enumerate(clients):
+                data = client_socket.recv(1024)
+                buffers[i] += data
+                print(f"Data from {client_address}: {data}")
+        
     except KeyboardInterrupt:
         print("Server interrupted by user. Closing connections.")
     finally:
