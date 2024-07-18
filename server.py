@@ -21,8 +21,31 @@ def read_server_config():
     
     return ip, int(port)
 
+def get_data_type():
+    finger_types = {
+        1: "thumb",
+        2: "index finger",
+        3: "middle finger",
+        4: "ring finger",
+        5: "pinky"
+    }
+
+    while True:
+        print("Please select the type of data you will be collecting:")
+        for key, value in finger_types.items():
+            print(f"{key}. {value}")
+
+        try:
+            choice = int(input("Enter the number corresponding to your choice: "))
+            if choice in finger_types:
+                return finger_types[choice]
+            else:
+                print("Invalid choice. Please enter a number between 1 and 5.")
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 5.")
+
 def start_server():
-    data_type = input("Please enter the type of data you will be collecting: ")
+    data_type = get_data_type()
     print(f"Data type set to: {data_type}")
 
     try:
@@ -44,7 +67,7 @@ def start_server():
             client_socket, client_address = server_socket.accept()
             print(f"Connection from {client_address}")
             clients.append((client_socket, client_address))
-
+        
         print("Both clients are connected. Switching between clients to record data.")
 
         while True:
@@ -52,7 +75,7 @@ def start_server():
                 data = client_socket.recv(1024)
                 buffers[i] += data
                 print(f"Data from {client_address}: {data}")
-        
+
     except KeyboardInterrupt:
         print("Server interrupted by user. Closing connections.")
     finally:
