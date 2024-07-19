@@ -1,8 +1,42 @@
-# REU 2024
-## What is the project?
+# Application Documentation
+This documentation provides an overview of the server and machine learning models used in this project. The server collects data from multiple clients, and the models classify this data based on the source.
 
-This is in short a mechanomyography project using parallel processing to create large data sets to be used with machine learning models.
+### Create a Virtual Environment
+#### Windows:
+```sh
+python -m venv myenv
+.\myenv\Scripts\activate
+```
 
-## What is an application?
+#### Linux:
+```sh
+python3 -m venv myenv
+source myenv/bin/activate
+```
 
-This project is an attempt in figuring out whether one limbs dataset can be carried over to another limb in finding which finger digit is moving.
+### Install the Necessary Libraries
+#### Windows:
+```sh
+pip install -r requirements.txt
+```
+
+#### Linux:
+```sh
+pip3 install -r requirements.txt
+```
+
+### How to Run the Server
+1. Ensure the `server_configuration` folder contains `ip.txt` and `port.txt` with the appropriate IP address and port number.
+2. Ensure the database is set up correctly with the necessary tables.
+
+### Example Code to Run the Server
+1. Make sure that you are in the root path as the server.py and run the following command,
+## Windows:
+```sh
+python server.py
+```
+
+## Linux:
+```sh
+python3 server.py
+```
