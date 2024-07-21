@@ -10,8 +10,8 @@ INPUT_SIZE = 1000  # Number of nodes in each input layer
 BUFFER_SIZE = INPUT_SIZE * 4  # Assuming each int is 4 bytes
 TOTAL_CLIENTS = 2
 
-# Finger name mapping
-FINGER_NAMES = ['thumb', 'index_finger', 'middle_finger', 'ring_finger', 'pinky']
+# Finger name mapping, including no movement
+FINGER_NAMES = ['thumb', 'index_finger', 'middle_finger', 'ring_finger', 'pinky', 'no_movement']
 
 def load_isolated_channel_model():
     return load_model('isolated_channel_single_output_model.h5')
