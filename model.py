@@ -9,6 +9,7 @@ import random
 # Constants
 INPUT_SIZE = 1000  # Number of nodes in each input layer
 HIDDEN_LAYER_NODES = 164  # Number of nodes in the hidden layers
+TRAINING_GENERATIONS = 20
 
 def create_isolated_channel_single_output_model():
     # Define input layers
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     x1, x2, y = load_data_from_db()
 
     # Train the isolated channel single output model
-    isolated_channel_single_output_model.fit([x1, x2], y, epochs=10, batch_size=32)
+    isolated_channel_single_output_model.fit([x1, x2], y, epochs=TRAINING_GENERATIONS, batch_size=32)
     
     # Save the model
     isolated_channel_single_output_model.save('isolated_channel_single_output_model.h5')
