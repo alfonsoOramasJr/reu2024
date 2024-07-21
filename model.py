@@ -30,8 +30,8 @@ def create_isolated_channel_single_output_model():
     x = Dense(HIDDEN_LAYER_NODES, activation='relu')(combined)
     x = Dense(HIDDEN_LAYER_NODES, activation='relu')(x)
     
-    # Output layer with 5 outputs
-    output = Dense(5, activation='softmax')(x)
+    # Output layer with 6 outputs
+    output = Dense(6, activation='softmax')(x)
     
     # Create model
     model = Model(inputs=[input1, input2], outputs=output, name='isolated_channel_single_output')
