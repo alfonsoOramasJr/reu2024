@@ -49,7 +49,7 @@ def get_data_type():
 def start_server():
     TOTAL_CLIENTS = 2  # The number of ESP32's we're collecting data from
     TOTAL_VALUES_FROM_EACH_CLIENT = 1000  # The expected number of values from each client
-    DEBUG = True  # Set to True to enable debug output
+    DEBUG = False  # Set to True to enable debug output
 
     data_type = get_data_type()
     print(f"Data type set to: {data_type}")
