@@ -8,7 +8,7 @@ import random
 
 # Constants
 INPUT_SIZE = 1000  # Number of nodes in each input layer
-HIDDEN_LAYER_NODES = 64  # Number of nodes in the hidden layers
+HIDDEN_LAYER_NODES = 400  # Number of nodes in the hidden layers
 
 def create_dual_channel_model():
     # Define input layers
