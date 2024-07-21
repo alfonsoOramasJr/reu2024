@@ -101,7 +101,8 @@ def start_server():
 
         # Process the collected data
         for i, buffer in enumerate(buffers):
-            print(f"Data collected from client {i}: {buffer}")
+            if DEBUG:
+                print(f"Data collected from client {i}: {buffer}")
 
             # Insert collected data into the database
             for data_values in buffer:
