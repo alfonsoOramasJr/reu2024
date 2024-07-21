@@ -29,7 +29,8 @@ def get_data_type():
         2: "index_finger",
         3: "middle_finger",
         4: "ring_finger",
-        5: "pinky"
+        5: "pinky",
+        6: "no_movement"
     }
 
     while True:
@@ -42,9 +43,9 @@ def get_data_type():
             if choice in finger_types:
                 return finger_types[choice]
             else:
-                print("Invalid choice. Please enter a number between 1 and 5.")
+                print("Invalid choice. Please enter a number between 1 and 6.")
         except ValueError:
-            print("Invalid input. Please enter a number between 1 and 5.")
+            print("Invalid input. Please enter a number between 1 and 6.")
 
 def start_server():
     TOTAL_CLIENTS = 2  # The number of ESP32's we're collecting data from
