@@ -1,3 +1,4 @@
 /server_configuration
 /myenv
 /database/database.db
+/database/__pycache__
