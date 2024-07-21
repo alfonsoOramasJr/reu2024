@@ -8,7 +8,7 @@ import random
 
 # Constants
 INPUT_SIZE = 1000  # Number of nodes in each input layer
-HIDDEN_LAYER_NODES = 400  # Number of nodes in the hidden layers
+HIDDEN_LAYER_NODES = 164  # Number of nodes in the hidden layers
 
 def create_dual_channel_model():
     # Define input layers
@@ -117,24 +117,24 @@ def load_data_from_db():
 
 # Example usage
 if __name__ == "__main__":
-    dual_channel_model = create_dual_channel_model()
+    #dual_channel_model = create_dual_channel_model()
     isolated_channel_single_output_model = create_isolated_channel_single_output_model()
     
-    dual_channel_model.summary()
+    #dual_channel_model.summary()
     isolated_channel_single_output_model.summary()
 
     # Load data from database
     x1, x2, y = load_data_from_db()
 
     # Train the dual channel model
-    dual_channel_model.fit([x1, x2], y, epochs=10, batch_size=32)
+    #dual_channel_model.fit([x1, x2], y, epochs=10, batch_size=32)
     
     # Train the isolated channel single output model
     isolated_channel_single_output_model.fit([x1, x2], y, epochs=10, batch_size=32)
     
     # Save the models
     # dual_channel_model.save('dual_channel_model.h5')
-    # isolated_channel_single_output_model.save('isolated_channel_single_output_model.h5')
+    isolated_channel_single_output_model.save('isolated_channel_single_output_model.h5')
     
     # To load the models
     # loaded_dual_channel_model = tf.keras.models.load_model('dual_channel_model.h5')
