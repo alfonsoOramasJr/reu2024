@@ -19,7 +19,7 @@ class DatabaseManager:
             self.conn.close()
 
     def create_tables_if_not_exist(self):
-        tables = ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky"]
+        tables = ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky", "no_movement"]
 
         for table in tables:
             self.cursor.execute(f"""
@@ -33,15 +33,15 @@ class DatabaseManager:
         self.conn.commit()
 
     def get_values_from_table(self, table_name, channel):
-        if table_name not in ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky"]:
-            raise ValueError("Invalid table name. Must be one of: thumb, index_finger, middle_finger, ring_finger, pinky")
+        if table_name not in ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky", "no_movement"]:
+            raise ValueError("Invalid table name. Must be one of: thumb, index_finger, middle_finger, ring_finger, pinky, no_movement")
 
         self.cursor.execute(f"SELECT * FROM {table_name} WHERE channel = ?", (channel,))
         rows = self.cursor.fetchall()
         return rows
 
     def gather_all_data(self):
-        tables = ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky"]
+        tables = ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky", "no_movement"]
         all_data = []
 
         for table in tables:
